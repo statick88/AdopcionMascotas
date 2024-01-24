@@ -62,12 +62,66 @@ const App = () => {
     }
   };
 
-  const handleDogSubmit = (dogName) => {
-    setDogs([...dogs, { id: dogs.length + 1, name: dogName }]);
+  const handleDogSubmit = async (dogName, dogBreed) => {
+    try {
+      const response = await fetch('http://localhost:3001/dogs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: dogName,
+          breed: dogBreed
+        }),
+      });
+
+      if (response.ok) {
+        const newDog = await response.json();
+        setDogs((prevDogs) => [...prevDogs, newDog]);
+        alert(`¡Nuevo perro agregado con éxito!\nID: ${newDog.id}\nNombre: ${newDog.name}\nRaza: ${newDog.breed}`);
+      } else {
+        throw new Error('Error al enviar la solicitud de nuevo Perrito');
+      }
+    } catch (error) {
+      console.log('Error en la solicitud de nuevo perrito:', error.message);
+      throw error;
+    }
   };
 
-  const handleAdopterSubmit = (adopterName) => {
-    setAdopters([...adopters, { id: adopters.length + 1, name: adopterName }]);
+  const handleAdopterSubmit = async (adopterName, adopterAddress) => {
+    try {
+      const response = await fetch('http://localhost:3001/adopters', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          name: adopterName, 
+          address: adopterAddress 
+        }),
+      });
+
+      if (response.ok) {
+        const newAdopter = await response.json();
+
+        // Imprime newAdopter para ver qué propiedades tiene
+        console.log(newAdopter);
+
+        if (!newAdopter.id || !newAdopter.name || !newAdopter.address) {
+          throw new Error('El nuevo adoptante no tiene ID o nombre o dirección');
+        }
+
+        setAdopters((prevAdopters) => [...prevAdopters, newAdopter]);
+
+        // Mostrar una alerta con los datos del nuevo adoptante
+        alert(`¡Nuevo adoptante creado con éxito!\nID: ${newAdopter.id}\nNombre: ${newAdopter.name}\nDirección: ${newAdopter.address}`);
+      } else {
+        throw new Error('Error al crear el nuevo adoptante');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud de nuevo adoptante:', error.message);
+      throw error;
+    }
   };
 
   return (
@@ -76,10 +130,10 @@ const App = () => {
       <AdoptionList adoptions={adoptions} dogs={dogs} adopters={adopters} />
       <h1>Disponibles para adopción</h1>
       <AvailableList dogs={dogs} adopters={adopters} />
-      <h1>Agregar nuevo perro</h1>
-      <AddDogForm onDogSubmit={handleDogSubmit} />
-      <h1>Agregar nuevo adoptante</h1>
-      <AddAdopterForm onAdopterSubmit={handleAdopterSubmit} />
+      <h1>Nuevo perro</h1>
+      <AddDogForm dogs={dogs} onDogSubmit={handleDogSubmit} />
+      <h1>Nuevo adoptante</h1>
+      <AddAdopterForm adopters={adopters} onAdopterSubmit={handleAdopterSubmit} />
       <h1>Nueva Adopción</h1>
       <AdoptionForm dogs={dogs} adopters={adopters} onAdoptionSubmit={handleAdoptionSubmit} />
     </div>

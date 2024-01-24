@@ -40,6 +40,28 @@ app.get('/dogs', (req, res) => {
     }
 });
 
+app.post('/dogs', (req, res) => {
+    try {
+        const { name, breed } = req.body;
+        if (!name || !breed) {
+            return res.status(400).json({ error: 'El nombre y la raza del perro son requeridos' });
+        }
+        const newDog = {
+            id: dogsData.length + 1,
+            name,
+            breed,
+        };
+        dogsData.push(newDog);
+        fs.writeFileSync(path.join(databasePath, 'dogs.js'), `module.exports = ${JSON.stringify(dogsData, null, 2)};`);
+
+        res.status(201).json(newDog);
+    }
+    catch (error) {
+        console.error('Error en POST /dogs:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.get('/adopters', (req, res) => {
     try {
         res.json(adoptersData);
@@ -48,6 +70,27 @@ app.get('/adopters', (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+app.post('/adopters', (req, res) => {
+    try {
+        const newAdopter = {
+            id: adoptersData.length + 1,
+            name: req.body.name,
+            address: req.body.address,
+        };
+
+        console.log('Nuevo adoptante:', newAdopter);
+
+        adoptersData.push(newAdopter);
+        fs.writeFileSync(path.join(databasePath, 'adopters.js'), `module.exports = ${JSON.stringify(adoptersData, null, 2)};`);
+
+        res.json(newAdopter);
+    } catch (error) {
+        console.error('Error en POST /adopters:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 app.get('/adoptions', (req, res) => {
     try {
@@ -64,7 +107,11 @@ app.post('/adoptions', (req, res) => {
             id: adoptionsData.length + 1,
             dogId: req.body.dogId,
             adopterId: req.body.adopterId,
+            dogname: req.body.dogname,
+            adoptername: req.body.adoptername,
         };
+
+        console.log('Nueva adopcion:', newAdoption);
 
         adoptionsData.push(newAdoption);
         fs.writeFileSync(path.join(databasePath, 'adoptions.js'), `module.exports = ${JSON.stringify(adoptionsData, null, 2)};`);

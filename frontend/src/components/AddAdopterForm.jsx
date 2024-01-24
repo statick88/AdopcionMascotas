@@ -4,20 +4,29 @@ import PropTypes from 'prop-types';
 
 const AddAdopterForm = ({ onAdopterSubmit }) => {
     const [adopterName, setAdopterName] = useState('');
+    const [adopterAddress, setAdopterAddress] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (adopterName) {
-            onAdopterSubmit(adopterName);
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (adopterName && adopterAddress) {
+            onAdopterSubmit(adopterName, adopterAddress);
             setAdopterName('');
+            setAdopterAddress('');
         } else {
-            console.error('Debe ingresar un nombre para el adoptante.');
+            console.error('Debe ingresar un nombre y una dirección para el adoptante.');
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <input type="text" value={adopterName} onChange={(e) => setAdopterName(e.target.value)} placeholder="Nombre del adoptante 👤" />
+            <label>
+                Nombre:
+                <input type="text" value={adopterName} onChange={(e) => setAdopterName(e.target.value)} required />
+            </label>
+            <label>
+                Dirección:
+                <input type="text" value={adopterAddress} onChange={(e) => setAdopterAddress(e.target.value)} required />
+            </label>
             <button type="submit">Agregar adoptante</button>
         </form>
     );
