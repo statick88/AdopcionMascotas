@@ -8,7 +8,22 @@ const app = express();
 const PORT = 3001;
 
 // Middleware para manejar CORS
-app.use(cors());
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173', 'http://example.com'];
+
+app.use(cors({
+        origin: function(origin, callback){
+            // allow requests with no origin 
+            // (like mobile apps or curl requests)
+            if(!origin) return callback(null, true);
+            if(allowedOrigins.indexOf(origin) === -1){
+                var msg = 'The CORS policy for this site does not ' +
+                                    'allow access from the specified Origin.';
+                return callback(new Error(msg), false);
+            }
+            return callback(null, true);
+        }
+}));
+
 app.use(express.json());
 
 // Rutas
@@ -77,6 +92,10 @@ app.post('/adopters', (req, res) => {
             id: adoptersData.length + 1,
             name: req.body.name,
             address: req.body.address,
+            province: req.body.province,
+            city: req.body.city,
+            district: req.body.district,
+            neighborhood: req.body.neighborhood,
         };
 
         console.log('Nuevo adoptante:', newAdopter);
@@ -90,7 +109,6 @@ app.post('/adopters', (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
 
 app.get('/adoptions', (req, res) => {
     try {

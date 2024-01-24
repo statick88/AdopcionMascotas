@@ -4,9 +4,4 @@ module.exports = [
     "name": "Buddy",
     "breed": "Labrador Retriever"
   },
-  {
-    "id": 2,
-    "name": "Rocky",
-    "breed": "mestizo"
-  }
 ];

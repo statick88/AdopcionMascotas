@@ -88,41 +88,45 @@ const App = () => {
     }
   };
 
-  const handleAdopterSubmit = async (adopterName, adopterAddress) => {
-    try {
-      const response = await fetch('http://localhost:3001/adopters', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          name: adopterName, 
-          address: adopterAddress 
-        }),
-      });
+  const handleAdopterSubmit = async (adopterName, adopterAddress, province, city, district, neighborhood) => {
+      try {
+        const response = await fetch('http://localhost:3001/adopters', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            name: adopterName, 
+            address: adopterAddress,
+            province,
+            city,
+            district,
+            neighborhood
+          }),
+        });
 
-      if (response.ok) {
-        const newAdopter = await response.json();
+        if (response.ok) {
+          const newAdopter = await response.json();
 
-        // Imprime newAdopter para ver qué propiedades tiene
-        console.log(newAdopter);
+          // Imprime newAdopter para ver qué propiedades tiene
+          console.log(newAdopter);
 
-        if (!newAdopter.id || !newAdopter.name || !newAdopter.address) {
-          throw new Error('El nuevo adoptante no tiene ID o nombre o dirección');
+          if (!newAdopter.id || !newAdopter.name || !newAdopter.address) {
+            throw new Error('El nuevo adoptante no tiene ID o nombre o dirección');
+          }
+
+          setAdopters((prevAdopters) => [...prevAdopters, newAdopter]);
+
+          // Mostrar una alerta con los datos del nuevo adoptante
+          alert(`¡Nuevo adoptante creado con éxito!\nID: ${newAdopter.id}\nNombre: ${newAdopter.name}\nDirección: ${newAdopter.address}\nProvincia: ${newAdopter.province}\nCiudad: ${newAdopter.city}\nDistrito: ${newAdopter.district}\nBarrio: ${newAdopter.neighborhood}`);
+        } else {
+          throw new Error('Error al crear el nuevo adoptante');
         }
-
-        setAdopters((prevAdopters) => [...prevAdopters, newAdopter]);
-
-        // Mostrar una alerta con los datos del nuevo adoptante
-        alert(`¡Nuevo adoptante creado con éxito!\nID: ${newAdopter.id}\nNombre: ${newAdopter.name}\nDirección: ${newAdopter.address}`);
-      } else {
-        throw new Error('Error al crear el nuevo adoptante');
+      } catch (error) {
+        console.error('Error en la solicitud de nuevo adoptante:', error.message);
+        throw error;
       }
-    } catch (error) {
-      console.error('Error en la solicitud de nuevo adoptante:', error.message);
-      throw error;
-    }
-  };
+    };
 
   return (
     <div className="App">

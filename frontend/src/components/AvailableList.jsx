@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 function AvailableList({ dogs, adopters }) {
     return (
-        <div>
+        <div className='card'>
             <h2>Perros disponibles 🐶</h2>
             <ul>
                 {dogs.map((dog) => (

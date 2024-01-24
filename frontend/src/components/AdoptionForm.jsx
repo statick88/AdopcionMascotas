@@ -19,25 +19,28 @@ const AdoptionForm = ({ dogs, adopters, onAdoptionSubmit }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <select value={selectedDog} onChange={(e) => setSelectedDog(e.target.value)}>
-                <option value="">Selecciona un perro 🐶</option>
-                {dogs.map((dog) => (
-                    <option key={dog.id} value={dog.id}>
-                        🐶 {dog.name}
-                    </option>
-                ))}
-            </select>
-            <select value={selectedAdopter} onChange={(e) => setSelectedAdopter(e.target.value)}>
-                <option value="">Selecciona un adoptante 👤</option>
-                {adopters.map((adopter) => (
-                    <option key={adopter.id} value={adopter.id}>
-                        👤 {adopter.name}
-                    </option>
-                ))}
-            </select>
-            <button type="submit">Adoptar</button>
-        </form>
+        <div className='card'>
+
+            <form onSubmit={handleSubmit}>
+                <select value={selectedDog} onChange={(e) => setSelectedDog(e.target.value)}>
+                    <option value="">Selecciona un perro 🐶</option>
+                    {dogs.map((dog) => (
+                        <option key={dog.id} value={dog.id}>
+                            🐶 {dog.name}
+                        </option>
+                    ))}
+                </select>
+                <select value={selectedAdopter} onChange={(e) => setSelectedAdopter(e.target.value)}>
+                    <option value="">Selecciona un adoptante 👤</option>
+                    {adopters.map((adopter) => (
+                        <option key={adopter.id} value={adopter.id}>
+                            👤 {adopter.name}
+                        </option>
+                    ))}
+                </select>
+                <button type="submit">Adoptar</button>
+            </form>
+        </div>
     );
 };
 
